@@ -3,55 +3,53 @@
  * @version jdk-9 in Intellij IDEA 2017.2.6
  */
 
-import javax.swing.*;
-import java.util.List;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class VirusLogica extends JFrame{
-    public static List<Integer> AllID_NoDoubles;
-    public static List<String> Allname_NoDoubles;
-    public static List<String> AllClas_NoDoubles;
-    static boolean performed = false;
-
-    public VirusLogica(List<Integer> AllID_NoDoubles,List<String> Allname_NoDoubles,List<String> AllClas_NoDoubles, boolean performed){
-        AllID_NoDoubles = this.AllID_NoDoubles;
-        Allname_NoDoubles = this.Allname_NoDoubles;
-        AllClas_NoDoubles = this.AllClas_NoDoubles;
-        performed = this.performed;
-    }
+public class VirusLogica extends VirusGUI{
     public VirusLogica(){
-        AllID_NoDoubles = VirusLogica.AllID_NoDoubles;
-        Allname_NoDoubles = VirusLogica.Allname_NoDoubles;
-        AllClas_NoDoubles = VirusLogica.AllClas_NoDoubles;
-        performed = VirusLogica.performed;
-    }
-    public List<Integer> getAllID_NoDoubles() {
-        return AllID_NoDoubles;
-    }
-    public void setAllID_NoDoubles(List<Integer> AllID_NoDoubles) {
-        this.AllID_NoDoubles = AllID_NoDoubles;
-    }
+        actioninput = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    VirusFunctions.PrintSelected();
 
-    public List<String> getAllname_NoDoubles() {
-        return Allname_NoDoubles;
-    }
-    public void setAllname_NoDoubles(List<String> Allname_NoDoubles) {
-        this.Allname_NoDoubles = Allname_NoDoubles;
-    }
+                } catch (Exception x) {
+                    System.out.println("Een Exception vond plaats");
+                    System.out.println(x.toString());
+                }
+            }};
+        actionall = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    VirusFunctions.ReadFile();
 
-    public List<String> getAllClas_NoDoubles() {
-        return AllClas_NoDoubles;
-    }
-    public void setAllClas_NoDoubles(List<String> AllClas_NoDoubles) {
-        this.AllClas_NoDoubles = AllClas_NoDoubles;
-    }
+                    VirusFunctions.getHostAmount();
 
-    public boolean getPerformed(){return performed;}
-    public void setPerformed(boolean performed) {
-        this.performed = performed;
-    }
+                    VirusFunctions.Sorting();
 
-    public static void main(String[] args) {
-        VirusLogica virlog = new VirusLogica();
-    }
+                    System.out.println("Het aantal Viruses is: " + Viruses.size());
 
-}
+                    VirusFunctions.DataFill();
+
+                    buttonentries.doClick();
+
+                } catch (java.lang.NumberFormatException jln) {
+                    System.out.println("Dit is geen goed Bestand");
+
+                } catch (Exception x) {
+                    System.out.println("Een Exception vond plaats");
+                    System.out.println(x.toString());
+                }
+            }
+        };
+        actionprocess = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    VirusFunctions.ListFiller();
+
+                } catch (Exception g) {
+                    System.out.println("Een Exception vond plaats");
+                    System.out.println(g.toString());
+                }
+            }};
+}}

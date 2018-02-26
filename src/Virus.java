@@ -12,9 +12,6 @@ public class Virus implements Comparable{
     private String Host_name;
     private Integer Aantal;
 
-    public enum Order {ID, Classificatie, AantalHosts}
-    private Order sortingBy;
-
     public Virus(int id, String chr, String chrc, int hostid, String hostname) {
         Virus_id = id;
         Soort = chr;
@@ -76,7 +73,4 @@ public class Virus implements Comparable{
         Virus g = (Virus)o;
         return this.Classificatie.compareTo(g.Classificatie);
             }
-    public void setSortingBy(Order sortBy) {
-        this.sortingBy = sortingBy;
-    }
 }
