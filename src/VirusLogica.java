@@ -8,16 +8,6 @@ import java.awt.event.ActionListener;
 
 public class VirusLogica extends VirusGUI{
     public VirusLogica(){
-        actioninput = new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    VirusFunctions.PrintSelected();
-
-                } catch (Exception x) {
-                    System.out.println("Een Exception vond plaats");
-                    System.out.println(x.toString());
-                }
-            }};
         actionall = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
@@ -25,13 +15,9 @@ public class VirusLogica extends VirusGUI{
 
                     VirusFunctions.getHostAmount();
 
-                    VirusFunctions.Sorting();
-
                     System.out.println("Het aantal Viruses is: " + Viruses.size());
 
                     VirusFunctions.DataFill();
-
-                    buttonentries.doClick();
 
                 } catch (java.lang.NumberFormatException jln) {
                     System.out.println("Dit is geen goed Bestand");
@@ -45,11 +31,23 @@ public class VirusLogica extends VirusGUI{
         actionprocess = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    VirusFunctions.ListFiller();
+                    VirusFunctions.Sorting();
 
                 } catch (Exception g) {
                     System.out.println("Een Exception vond plaats");
                     System.out.println(g.toString());
+                }
+            }};
+        actioninput = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    VirusFunctions.PrintSelected();
+
+                    VirusFunctions.ListFiller();
+
+                } catch (Exception x) {
+                    System.out.println("Een Exception vond plaats");
+                    System.out.println(x.toString());
                 }
             }};
 }}

@@ -22,6 +22,8 @@ public class VirusFunctions extends VirusLogica {
 
             Viruses = new ArrayList<>();
 
+            VirusHostMap = new HashMap<>();
+
             for (String x = r.readLine(); x != null; x = r.readLine()) {
 
                 if (!x.startsWith("virus tax id")) {
@@ -31,6 +33,15 @@ public class VirusFunctions extends VirusLogica {
                     //De lege entries zijn nu 0 bij host id's
                     Virus VirusEntry = new Virus(Integer.parseInt(gesplit[0]), gesplit[1], gesplit[2], Integer.parseInt(gesplit[7].replaceAll("(^(\\r\\n|\\n|\\r)$)|(^(\\r\\n|\\n|\\r))|^\\s*$", "0")), gesplit[8]);
                     Viruses.add(VirusEntry);
+
+                    if(VirusHostMap.containsKey(VirusEntry.getHost_id())){
+                        VirusHostMap.get(VirusEntry.getHost_id()).add(VirusEntry);
+                    }
+                    else {
+                        HashSet<Virus> VirusHashSet = new HashSet<>();
+                        VirusHashSet.add(VirusEntry);
+                        VirusHostMap.put(VirusEntry.getHost_id(), VirusHashSet);
+                    }
                 }
             }
 
@@ -73,16 +84,12 @@ public class VirusFunctions extends VirusLogica {
     public static void PrintSelected() {
         try {
             SelectedClassification = (String) VirusClassList.getSelectedItem();
-            System.out.println("You selected the Classification: " + SelectedClassification);
 
             SelectedHostIDone = (String) HostIDoneList.getSelectedItem();
-            System.out.println("You selected the Host ID: " + SelectedHostIDone);
 
             SelectedHostIDtwo = (String) HostIDtwoList.getSelectedItem();
-            System.out.println("You selected the Host ID: " + SelectedHostIDtwo);
 
             SelectedVirus1 = (String) Virus1.getSelectedItem();
-            System.out.println("You selected the : " + SelectedVirus1);
 
         } catch (Exception x) {
             System.out.println("Een Exception vond plaats");
@@ -111,19 +118,23 @@ public class VirusFunctions extends VirusLogica {
     public static void Sorting(){
         if (r1.isSelected()) {
             Viruses.sort(Comparator.comparing(Virus::getHost_id));
+            DataFill();
         }
         if (r2.isSelected()) {
             Collections.sort(Viruses);
+            DataFill();
         }
         if (r3.isSelected()) {
             VirusFunctions.CompareHostNumber();
+            DataFill();
+        }
+        else {
+            DataFill();
         }
     }
 
     public static void DataFill(){
 
-        ArrayList<Integer> HostIDsEen = new ArrayList<>();
-        ArrayList<Integer> HostIDsTwee = new ArrayList<>();
         ArrayList<Integer> AllID = new ArrayList<>();
         ArrayList<String> Allname = new ArrayList<>();
         ArrayList<String> AllClas = new ArrayList<>();
@@ -143,61 +154,54 @@ public class VirusFunctions extends VirusLogica {
         List<String> stringsHost2 = AllID_NoDoubles.stream().map(Object::toString).collect(Collectors.toList());
         HostIDtwo = stringsHost2.toArray(new String[0]);
 
-        DefaultComboBoxModel modelHost1 = new DefaultComboBoxModel(HostIDone);
-        DefaultComboBoxModel modelHost2 = new DefaultComboBoxModel(HostIDtwo);
-        HostIDoneList.setModel(modelHost1);
-        HostIDtwoList.setModel(modelHost2);
+        HostIDoneList.setModel(new DefaultComboBoxModel(HostIDone));
+        HostIDtwoList.setModel(new DefaultComboBoxModel(HostIDtwo));
 
         List<String> Allname_NoDoubles = new ArrayList<>(new LinkedHashSet<>(Allname));
         List<String> AllClas_NoDoubles = new ArrayList<>(new LinkedHashSet<>(AllClas));
 
         VirusClassification = AllClas_NoDoubles.toArray(new String[AllClas_NoDoubles.size()]);
-        DefaultComboBoxModel modelone = new DefaultComboBoxModel(VirusClassification);
-        VirusClassList.setModel(modelone);
+        VirusClassList.setModel(new DefaultComboBoxModel(VirusClassification));
 
-        HostIDsEen.retainAll(HostIDsTwee);
-        System.out.println("De grootte van de OVEREENKOMST: " + HostIDsEen.size());
-
-        StringBuilder s = new StringBuilder();
-
-        int count = 0;
-
-        for (Integer i : HostIDsEen) {
-            s.append(i.toString()).append(" ").append("\n");
-
-            count++;
-        }
-        Overeenkomst.setText(s.toString());
-        Overeenkomst.setEditable(false);
     }
     public static void ListFiller(){
-        ArrayList<Virus>  VirusClassDel = new ArrayList<>();
-
+        StringBuilder sx = new StringBuilder();
+        StringBuilder sy = new StringBuilder();
         for (Virus vir : Viruses) {
-            if (vir.getClassificatie().equals(SelectedClassification)) {            //Dit mogelijk weg doen
+
+            if (vir.getClassificatie().equals(SelectedClassification) | !vir.getClassificatie().equals("Geen Classificatiesort")) {
+
                 if (vir.getHost_id() == (Integer.parseInt(SelectedHostIDone))) {
-                    StringBuilder s = new StringBuilder();
-
-                    s.append((vir.getVirus_id()));
-                    s.append(" ").append(vir.getHost_name()).append("\n");
-
-                    Viruslijstx.setText(s.toString());
+                    sx.append(vir.getVirus_id()).append("\n");
                 }
                 if (vir.getHost_id() == (Integer.parseInt(SelectedHostIDtwo))) {
-                    StringBuilder s = new StringBuilder();
-
-                    s.append((vir.getVirus_id()));
-                    s.append(" ").append(vir.getHost_name()).append("\n");
-
-                    Viruslijsty.setText(s.toString());
+                    sy.append(vir.getVirus_id()).append("\n");
                 }
             }
-//                        if (!vir.getClassificatie().equals(SelectedClassification)){
-//                            VirusClassDel.add(vir);
-//                        }
+            else {
+                Viruslijstx.setText("Geen Overeenkomst");
+                Viruslijsty.setText("Geen Overeenkomst");
+            }
         }
-        //for (Virus vir:VirusClassDel){
-        //Viruses.remove(vir);
-        //}
+        Viruslijstx.setText(sx.toString());
+        Viruslijsty.setText(sy.toString());
+        SimilaritySearch(sx,sy);
+    }
+    public static void SimilaritySearch(StringBuilder sx, StringBuilder sy){
+        StringBuilder s = new StringBuilder();
+
+        List<Integer> x  = Arrays.stream(Arrays.stream(sx.toString().split("\n")).mapToInt(Integer::parseInt).toArray()).boxed().collect( Collectors.toList() );
+        List<Integer> y  = Arrays.stream(Arrays.stream(sy.toString().split("\n")).mapToInt(Integer::parseInt).toArray()).boxed().collect( Collectors.toList() );
+
+        x.retainAll(y);
+
+        for (Integer IDname: x){
+            if(y.contains(IDname))
+                s.append(IDname + "\n");
+        }
+        if (s.length() == 0){  //Dit werkt nog niet
+            Overeenkomst.setText("Geen Overeenkomst");
+        }
+        Overeenkomst.setText(s.toString());
     }
 }

@@ -2,7 +2,7 @@
  * @author Justin Huberts
  * @version jdk-9 in Intellij IDEA 2017.2.6
  * Ik heb Nicky en Ruben geholpen.
- * Bij de herkansing heeft Nicky mij geholpen met een hashmap en een minder complexe CompareTo functie bij Aantal Hosts.
+ * Bij de herkansing heeft Nicky mij geholpen met de hashmaps/hashsets en een minder complexe CompareTo functie bij Aantal Hosts.
  */
 
 import javax.swing.*;
@@ -11,7 +11,7 @@ import java.awt.event.*;
 import java.util.*;
 
 public class VirusGUI extends JFrame {
-    static ActionListener actionall, actioninput, actionprocess;
+    static ActionListener actionall, actioninput, actionprocess, actionSorting;
     static JTextArea Viruslijstx, Viruslijsty, Overeenkomst;
     static JButton button,buttonentries;
     static JRadioButton r1,r2,r3;
@@ -19,6 +19,7 @@ public class VirusGUI extends JFrame {
     static JComboBox<String> VirusClassList, HostIDoneList, HostIDtwoList, Virus1;
     static String SelectedClassification, SelectedHostIDone, SelectedHostIDtwo, SelectedVirus1;
     static ArrayList<Virus> Viruses;
+    static HashMap<Integer,HashSet<Virus>> VirusHostMap;
     static JScrollPane scrollone,scrolltwo,scrollthree;
     static JFileChooser chooser;
 
@@ -35,7 +36,7 @@ public class VirusGUI extends JFrame {
         buttonentries.setBounds(375, 300, 150, 40);
         f.add(buttonentries);
 
-        JTextArea Summary = new JTextArea("De stappen zijn:\n\n1. Zoek Bestand in Chooser\n2. Druk op 'Open'\n3. Kies een Sortering\n4. Submit het bestand\n(5). (Optioneel):\nKijk naar de placeholders\n6. Submit de inputvelden\n7. Voor hergebruik,\n herstart programma");
+        JTextArea Summary = new JTextArea("De stappen zijn:\n\n(1). (Optioneel):\nKijk naar de placeholders\n2. Zoek Bestand in Chooser\n3. Druk op 'Open'\n4. Submit het bestand\n5. Kies een Sortering\n6. Submit de inputvelden\n7. Voor hergebruik,\n submit input opnieuw en\n sorteer opnieuw(optioneel)");
         Summary.setBounds(10, 50, 170, 280);
         f.add(Summary);
 
@@ -107,6 +108,8 @@ public class VirusGUI extends JFrame {
         scrollthree.setBounds(375, 650, 150, 60);
         f.add(scrollthree);
 
+        Overeenkomst.setEditable(false);
+
         JLabel L1 = new JLabel("Virusclassificatie");
         L1.setBounds(225, 330, 450, 40);
         JLabel L2 = new JLabel("Viruslijst 1");
@@ -132,6 +135,8 @@ public class VirusGUI extends JFrame {
 
         button.addActionListener(virlog.actionall);
         buttonentries.addActionListener(virlog.actioninput);
-        buttonentries.addActionListener(virlog.actionprocess);
+        r1.addActionListener(virlog.actionprocess);
+        r2.addActionListener(virlog.actionprocess);
+        r3.addActionListener(virlog.actionprocess);
     }
 }
