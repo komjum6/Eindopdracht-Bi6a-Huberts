@@ -15,8 +15,6 @@ public class VirusLogica extends VirusGUI{
 
                     VirusFunctions.getHostAmount();
 
-                    System.out.println("Het aantal Viruses is: " + Viruses.size());
-
                     VirusFunctions.DataFill();
 
                 } catch (java.lang.NumberFormatException jln) {

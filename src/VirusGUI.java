@@ -11,7 +11,7 @@ import java.awt.event.*;
 import java.util.*;
 
 public class VirusGUI extends JFrame {
-    static ActionListener actionall, actioninput, actionprocess, actionSorting;
+    static ActionListener actionall, actioninput, actionprocess;
     static JTextArea Viruslijstx, Viruslijsty, Overeenkomst;
     static JButton button,buttonentries;
     static JRadioButton r1,r2,r3;

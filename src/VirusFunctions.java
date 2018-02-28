@@ -89,8 +89,6 @@ public class VirusFunctions extends VirusLogica {
 
             SelectedHostIDtwo = (String) HostIDtwoList.getSelectedItem();
 
-            SelectedVirus1 = (String) Virus1.getSelectedItem();
-
         } catch (Exception x) {
             System.out.println("Een Exception vond plaats");
             System.out.println(x.toString());
@@ -135,46 +133,40 @@ public class VirusFunctions extends VirusLogica {
 
     public static void DataFill(){
 
-        ArrayList<Integer> AllID = new ArrayList<>();
-        ArrayList<String> Allname = new ArrayList<>();
-        ArrayList<String> AllClas = new ArrayList<>();
+        LinkedHashSet<String> Allname = new LinkedHashSet<>();
+        LinkedHashSet<String> AllClas = new LinkedHashSet<>();
 
         AllClas.add("Geen Classificatiesort");
 
         for (Virus vir : Viruses) {
-            AllID.add(vir.getHost_id());
-            Allname.add(vir.getHost_name());
+            Allname.add(Integer.toString(vir.getHost_id()) + " " + vir.getHost_name());
             AllClas.add(vir.getClassificatie());
         }
 
-        List<Integer> AllID_NoDoubles = new ArrayList<>(new LinkedHashSet<>(AllID));
-
-        List<String> stringsHost1 = AllID_NoDoubles.stream().map(Object::toString).collect(Collectors.toList());
-        HostIDone = stringsHost1.toArray(new String[0]);
-        List<String> stringsHost2 = AllID_NoDoubles.stream().map(Object::toString).collect(Collectors.toList());
-        HostIDtwo = stringsHost2.toArray(new String[0]);
+        HostIDone = Allname.toArray(new String[Allname.size()]);
 
         HostIDoneList.setModel(new DefaultComboBoxModel(HostIDone));
-        HostIDtwoList.setModel(new DefaultComboBoxModel(HostIDtwo));
+        HostIDtwoList.setModel(new DefaultComboBoxModel(HostIDone));
 
-        List<String> Allname_NoDoubles = new ArrayList<>(new LinkedHashSet<>(Allname));
-        List<String> AllClas_NoDoubles = new ArrayList<>(new LinkedHashSet<>(AllClas));
-
-        VirusClassification = AllClas_NoDoubles.toArray(new String[AllClas_NoDoubles.size()]);
+        VirusClassification = AllClas.toArray(new String[AllClas.size()]);
         VirusClassList.setModel(new DefaultComboBoxModel(VirusClassification));
 
     }
     public static void ListFiller(){
+        /**
+         * Bij deze functie is ervoor gekozen om StringBuilders te gebruiken voor het vergelijken
+         */
+
         StringBuilder sx = new StringBuilder();
         StringBuilder sy = new StringBuilder();
         for (Virus vir : Viruses) {
 
             if (vir.getClassificatie().equals(SelectedClassification) | !vir.getClassificatie().equals("Geen Classificatiesort")) {
 
-                if (vir.getHost_id() == (Integer.parseInt(SelectedHostIDone))) {
+                if (vir.getHost_id() == (Integer.parseInt(SelectedHostIDone.replaceAll("[^\\d.]|\\.", "")))) {
                     sx.append(vir.getVirus_id()).append("\n");
                 }
-                if (vir.getHost_id() == (Integer.parseInt(SelectedHostIDtwo))) {
+                if (vir.getHost_id() == (Integer.parseInt(SelectedHostIDtwo.replaceAll("[^\\d.]|\\.", "")))) {
                     sy.append(vir.getVirus_id()).append("\n");
                 }
             }
