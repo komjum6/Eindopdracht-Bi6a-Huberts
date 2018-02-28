@@ -2,7 +2,7 @@
  * @author Justin Huberts
  * @version jdk-9 in Intellij IDEA 2017.2.6
  * Ik heb Nicky en Ruben geholpen.
- * Bij de herkansing heeft Nicky mij geholpen met de hashmaps/hashsets en een minder complexe CompareTo functie bij Aantal Hosts.
+ * Bij de herkansing heeft Nicky mij geholpen met de hashmap en een minder complexe CompareTo functie bij Aantal Hosts.
  */
 
 import javax.swing.*;
@@ -17,9 +17,8 @@ public class VirusGUI extends JFrame {
     static JRadioButton r1,r2,r3;
     static String[] HostIDone,HostIDtwo,VirusClassification;
     static JComboBox<String> VirusClassList, HostIDoneList, HostIDtwoList, Virus1;
-    static String SelectedClassification, SelectedHostIDone, SelectedHostIDtwo, SelectedVirus1;
+    static String SelectedClassification, SelectedHostIDone, SelectedHostIDtwo;
     static ArrayList<Virus> Viruses;
-    static HashMap<Integer,HashSet<Virus>> VirusHostMap;
     static JScrollPane scrollone,scrolltwo,scrollthree;
     static JFileChooser chooser;
 

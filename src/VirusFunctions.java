@@ -9,20 +9,16 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class VirusFunctions extends VirusLogica {
     public static void ReadFile() {
         try {
             File selectedFile = chooser.getSelectedFile();
 
-            //Tijdelijk: Hier kan nu gekozen worden de ene uit te commenten of de andere
-            BufferedReader r = new BufferedReader(new FileReader("D:/\\Bio-Infmap/Data/Periode 6/virushostdb.tsv"));
-            //BufferedReader r = new BufferedReader(new FileReader(selectedFile));
+            //BufferedReader r = new BufferedReader(new FileReader("D:/\\Bio-Infmap/Data/Periode 6/virushostdb.tsv"));
+            BufferedReader r = new BufferedReader(new FileReader(selectedFile));
 
             Viruses = new ArrayList<>();
-
-            VirusHostMap = new HashMap<>();
 
             for (String x = r.readLine(); x != null; x = r.readLine()) {
 
@@ -33,15 +29,6 @@ public class VirusFunctions extends VirusLogica {
                     //De lege entries zijn nu 0 bij host id's
                     Virus VirusEntry = new Virus(Integer.parseInt(gesplit[0]), gesplit[1], gesplit[2], Integer.parseInt(gesplit[7].replaceAll("(^(\\r\\n|\\n|\\r)$)|(^(\\r\\n|\\n|\\r))|^\\s*$", "0")), gesplit[8]);
                     Viruses.add(VirusEntry);
-
-                    if(VirusHostMap.containsKey(VirusEntry.getHost_id())){
-                        VirusHostMap.get(VirusEntry.getHost_id()).add(VirusEntry);
-                    }
-                    else {
-                        HashSet<Virus> VirusHashSet = new HashSet<>();
-                        VirusHashSet.add(VirusEntry);
-                        VirusHostMap.put(VirusEntry.getHost_id(), VirusHashSet);
-                    }
                 }
             }
 
@@ -114,6 +101,7 @@ public class VirusFunctions extends VirusLogica {
     }
 
     public static void Sorting(){
+
         if (r1.isSelected()) {
             Viruses.sort(Comparator.comparing(Virus::getHost_id));
             DataFill();
@@ -153,9 +141,6 @@ public class VirusFunctions extends VirusLogica {
 
     }
     public static void ListFiller(){
-        /**
-         * Bij deze functie is ervoor gekozen om StringBuilders te gebruiken voor het vergelijken
-         */
 
         StringBuilder sx = new StringBuilder();
         StringBuilder sy = new StringBuilder();
@@ -170,10 +155,6 @@ public class VirusFunctions extends VirusLogica {
                     sy.append(vir.getVirus_id()).append("\n");
                 }
             }
-            else {
-                Viruslijstx.setText("Geen Overeenkomst");
-                Viruslijsty.setText("Geen Overeenkomst");
-            }
         }
         Viruslijstx.setText(sx.toString());
         Viruslijsty.setText(sy.toString());
@@ -182,18 +163,18 @@ public class VirusFunctions extends VirusLogica {
     public static void SimilaritySearch(StringBuilder sx, StringBuilder sy){
         StringBuilder s = new StringBuilder();
 
-        List<Integer> x  = Arrays.stream(Arrays.stream(sx.toString().split("\n")).mapToInt(Integer::parseInt).toArray()).boxed().collect( Collectors.toList() );
-        List<Integer> y  = Arrays.stream(Arrays.stream(sy.toString().split("\n")).mapToInt(Integer::parseInt).toArray()).boxed().collect( Collectors.toList() );
+        Set<String> x = new HashSet<>(Arrays.asList(sx.toString().split("\n")));
+        Set<String> y = new HashSet<>(Arrays.asList(sy.toString().split("\n")));
 
         x.retainAll(y);
 
-        for (Integer IDname: x){
+        for (String IDname: x){
             if(y.contains(IDname))
                 s.append(IDname + "\n");
         }
-        if (s.length() == 0){  //Dit werkt nog niet
+        Overeenkomst.setText(s.toString());
+        if (s.length() == 0){
             Overeenkomst.setText("Geen Overeenkomst");
         }
-        Overeenkomst.setText(s.toString());
     }
 }
